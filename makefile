@@ -1,4 +1,3 @@
-
 FC = gfortran
 FFLAGS = -Wall -Wextra -Wpedantic -fcheck=all -g -O0
 
@@ -48,10 +47,16 @@ $(BUILD)/thermal_solver.o: thermal_solver.f90 $(BUILD)/types_geometry.o $(BUILD)
 $(BUILD)/output.o: output.f90 $(BUILD)/types_geometry.o
 	$(FC) $(FFLAGS) -J$(BUILD) -I$(BUILD) -c $< -o $@
 
-$(BUILD)/main.o: main.f90 $(BUILD)/delaunay.o $(BUILD)/thermal_solver.o $(BUILD)/output.o
+# Règle pour le nouveau module de post-traitement
+$(BUILD)/post_traitement.o: post_traitement.f90 $(BUILD)/precision.o $(BUILD)/types_geometry.o
 	$(FC) $(FFLAGS) -J$(BUILD) -I$(BUILD) -c $< -o $@
 
-$(TARGET): $(BUILD)/precision.o $(BUILD)/types_geometry.o $(BUILD)/predicates.o $(BUILD)/sorting.o $(BUILD)/walk.o $(BUILD)/cavity.o $(BUILD)/delaunay_ball.o $(BUILD)/delaunay.o $(BUILD)/mesh_tools.o $(BUILD)/boundary_conditions.o $(BUILD)/thermal_solver.o $(BUILD)/output.o $(BUILD)/main.o
+# Le main dépend de post_traitement (et des autres modules)
+$(BUILD)/main.o: main.f90 $(BUILD)/precision.o $(BUILD)/types_geometry.o $(BUILD)/delaunay.o $(BUILD)/thermal_solver.o $(BUILD)/output.o $(BUILD)/post_traitement.o
+	$(FC) $(FFLAGS) -J$(BUILD) -I$(BUILD) -c $< -o $@
+
+# Édition des liens avec tous les objets générés
+$(TARGET): $(BUILD)/precision.o $(BUILD)/types_geometry.o $(BUILD)/predicates.o $(BUILD)/sorting.o $(BUILD)/walk.o $(BUILD)/cavity.o $(BUILD)/delaunay_ball.o $(BUILD)/delaunay.o $(BUILD)/mesh_tools.o $(BUILD)/boundary_conditions.o $(BUILD)/thermal_solver.o $(BUILD)/output.o $(BUILD)/post_traitement.o $(BUILD)/main.o
 	$(FC) $(FFLAGS) -o $@ $^
 
 run: $(TARGET)
