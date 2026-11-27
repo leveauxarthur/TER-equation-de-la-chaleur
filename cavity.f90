@@ -101,7 +101,7 @@ contains
         ! Calcul du déterminant 3x3 pour le cercle circonscrit
         ! Remarque : Si tri_index est un triangle fantôme (relié à p_inf),
         ! inCircle renvoie .true. si p_new est du côté extérieur de l'arête réelle.
-        inCircle = .true. ! (À remplacer par ton prédicat géométrique 2D)
+        inCircle = .true. ! (À remplacer par notre prédicat géométrique 2D)
     end function inCircle
 
     integer function find_local_edge(tri_A, tri_B, tri_neighbors)
