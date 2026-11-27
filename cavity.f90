@@ -69,7 +69,7 @@ contains
                 ! Avec le point à l'infini p_inf, neighbor_tri n'est jamais 0
                 if (state(neighbor_tri) == 0) then
                     
-                    ! /!\ PRÉDICAT 2D : Cercle circonscrit /!\
+                    ! Si dans le cercle circonscrit
                     if (inCircle(neighbor_tri, p_new)) then
                         state(neighbor_tri) = 1
                         queue(tail) = neighbor_tri
